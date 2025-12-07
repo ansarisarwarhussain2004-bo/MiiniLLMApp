@@ -9,31 +9,32 @@ load_dotenv()
 llm=ChatGroq(model="llama-3.3-70b-versatile")
 
 def extract(article):
-    global llm
-    prompt='''
-    From the below article , extract movie name , budget , revenue , studio name in JSON output format containing
-    the following keys: 'revenue_expected' , 'eps_actual' , 'revenue_expected' , 'eps_expected'
+    prompt ='''
+    From the below article, extract movie name, budget, revenue, studio name in JSON output format containing
+    the following keys: 'revenue_actual', 'eps_actual' , 'revenue_expected', 'eps_expected'
 
+    For each value should have a unit such as million or billion
 
-    for each value the vaild JSON. No preamble
-
-    Only return the valid JSON. No preamble 
+    Only return the valid JSON. No preamble
 
     Article
-    =======
+    ========
     {article}
-
     '''
 
     pt=PromptTemplate.from_template(prompt)
 
+    global llm
 
-    Chain = pt | llm
-    response = Chain.invoke({article})
+    chain = pt | llm
 
-    parser = JsonOutputParser()
+    response= chain.invoke({'article':article})
+
+    parser= JsonOutputParser()
 
     try:
         res=parser.parse(response.content)
     except OutputParserException:
-        raise OutputParserException("Context too big Unable to parse job")
+        raise OutputParserException("Context too big. Unable to parse jobs")
+
+    return res
