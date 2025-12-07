@@ -31,7 +31,7 @@ def extract(article):
     Chain = pt | llm
     response = Chain.invoke({article})
 
-    parser = JsonOutputParser
+    parser = JsonOutputParser()
 
     try:
         res=parser.parse(response.content)
