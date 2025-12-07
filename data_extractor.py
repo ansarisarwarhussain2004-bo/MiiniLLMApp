@@ -8,7 +8,7 @@ load_dotenv()
 
 llm=ChatGroq(model="llama 3.3-70b-versalite")
 
-def extractor(article):
+def extract(article):
     global llm
     prompt='''
     From the below article , extract movie name , budget , revenue , studio name in JSON output format containing
